@@ -1,5 +1,5 @@
 //
-//  ASControlNode+Style.swift
+//  ASDisplayNode+Style.swift
 //  pinknoise
 //
 //  Created by Adam Tait on 2/22/18.
@@ -20,7 +20,7 @@ func toCgFloat(anyNumber n: Any) -> CGFloat
 
 
 
-extension ASControlNode
+extension ASDisplayNode
 {
     func set(style : Style)
     {
