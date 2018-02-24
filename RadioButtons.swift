@@ -83,14 +83,18 @@ class RadioButtons
     
     
     // Find Selected VC
+    func getSelectedIndex() -> Int?
+    {
+        if let i = selectedIndex.get()
+        {
+            if buttons.indices.contains(i)   { return i }
+        }
+        return nil
+    }
+    
     func getSelectedVC() -> ButtonVC?
     {
-        if let curIndex = selectedIndex.get()
-        {
-            if buttons.indices.contains(curIndex) {
-                return buttons[curIndex]
-            }
-        }
+        if let i = getSelectedIndex()       { return buttons[i] }
         return nil
     }
     
