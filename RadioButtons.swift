@@ -9,57 +9,94 @@
 import Foundation
 
 
-class RadioButtons : Observable
+func wrap<T>(_ before   : @escaping () -> Void,
+             _ fn       : @escaping (T) -> Void,
+             _ after    : @escaping () -> Void)
+    -> (T)
+    -> Void
+{
+    return { v in
+        before()
+        fn(v)
+        after()
+    }
+}
+
+
+
+
+
+class RadioButtons
     // a collection of mutually exclusively selected/highlighted ButtonVC
     // mutually exclusive => only one button is selected at a time
+    // double selection: when the same button is selected twice in a row, that button is de-selected
 {
-    let buttons : [ButtonVC]
+    let buttons                         : [ButtonVC]
+    let selectedIndex                   = MutableProperty<Int>(-1)      // -1 => none selected. Any value outside 0..<buttons.count will do
+    fileprivate var selectedObservers   : [Observable.Ref]  = []
     
     init(_ btns : [ButtonVC])
     {
         self.buttons = btns
-        super.init()
-        btns.forEach { bvc in
-            let o = newTouchesObserver(buttonVC: bvc)
+        
+        // add observers
+        for i in 0 ..< btns.count
+        {
+            let bvc = btns[i]
+            let o = newTouchesObserver(buttonVC: bvc, index: i)
             _ = bvc.touches.addObserver(o)
+            selectedObservers.append(bvc.selected.addObserver(o))
         }
     }
     
     
     // Observers
-    func newTouchesObserver(buttonVC : ButtonVC) -> (_ o: Observable) -> Void
+    func newTouchesObserver(buttonVC    : ButtonVC,
+                            index i     : Int)
+        -> (_ o: Observable)
+        -> Void
     {
-        return { o in
-            if let vc = self.getSelectedVC()
-            {
-                vc.selected.set(false)
-            }
-            buttonVC.selected.set(true)
-            self.notify()
-        }
+        return wrap(
+            {   // de-activate selected observers
+                self.selectedObservers.forEach { $0.active.set(false) }
+        },
+            { o in
+                // de-select current selected VC
+                if let vc = self.getSelectedVC() {
+                    vc.selected.set(false)
+                }
+                
+                if i == self.selectedIndex.get()
+                {   // double selection
+                    self.selectedIndex.set(-1)
+                }
+                else
+                {   // select new VC
+                    self.selectedIndex.set(i)
+                    buttonVC.selected.set(true)
+                }
+        },
+            {   // re-activate selected observers
+                self.selectedObservers.forEach { $0.active.set(true) }
+        })
     }
     
     
     // Find Selected VC
-    func getSelectedIndex() -> Int?
+    func getSelectedVC() -> ButtonVC?
     {
-        for i in 0 ..< buttons.count {
-            if buttons[i].selected.get()! {
-                return i
+        if let curIndex = selectedIndex.get()
+        {
+            if buttons.indices.contains(curIndex) {
+                return buttons[curIndex]
             }
         }
         return nil
     }
     
-    func getSelectedVC() -> ButtonVC?
-    {
-        return buttons.first(where: { $0.selected.get()! })
-    }
-    
     func deselectAll()
     {
-        let vc = getSelectedVC()
-        vc?.selected.set(false)
+        if let vc = getSelectedVC()     { vc.selected.set(false) }
     }
 }
 
