@@ -21,8 +21,32 @@ func toCgFloat(anyNumber n: Any) -> CGFloat
 
 
 extension ASDisplayNode
+    // IMPORTANT! to begin, you must retrieve self.style (this sets up the observer on changes to ASDisplayNode.style)
 {
-    func set(style : Style)
+    static let defaultStyle : Style = [StyleType.bgColor : UIColor.white,
+                                       StyleType.fgColor : UIColor.blue]
+    
+    fileprivate static func cascade(style s: Style) -> Style {
+        return merge(styles: [MutableControlNode.defaultStyle, s])
+    }
+    
+    private static let association = ObjectAssociation<MutableProperty<Style>>()
+    
+    var style: MutableProperty<Style>
+    {
+        get {
+            if let v = ASDisplayNode.association[self]  { return v }
+            
+            // else create+save new
+            let v = MutableProperty<Style>(ASDisplayNode.defaultStyle)
+            ASDisplayNode.association[self] = v
+            v.addObserver(styleChanged)
+            return v
+        }
+    }
+    
+    // public interface
+    func apply(style : Style)
     {
         if let v = style[.bgColor] as? UIColor      { self.backgroundColor = v }
         if let v = style[.fgColor] as? UIColor      { self.tintColor = v }
@@ -35,5 +59,13 @@ extension ASDisplayNode
         if let v = style[.cornerRadius] {
             self.cornerRadius = toCgFloat(anyNumber: v)
         }
+    }
+    
+    
+    // observers
+    func styleChanged(_: Observable)
+    {
+        let s = ASDisplayNode.cascade(style: style)
+        apply(style: s)
     }
 }
