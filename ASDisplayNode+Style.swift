@@ -19,20 +19,21 @@ func toCgFloat(anyNumber n: Any) -> CGFloat
 }
 
 
-
 extension ASDisplayNode
-    // IMPORTANT! to begin, you must retrieve self.style (this sets up the observer on changes to ASDisplayNode.style)
+    // IMPORTANT! to begin, you must retrieve self.styleset (this sets up the observer on changes to ASDisplayNode.styleset)
 {
+    private static let association = ObjectAssociation<MutableProperty<Style>>()
+    
+    // Style
     static let defaultStyle : Style = [StyleType.bgColor : UIColor.white,
                                        StyleType.fgColor : UIColor.blue]
     
-    fileprivate static func cascade(style s: Style) -> Style {
-        return merge(styles: [MutableControlNode.defaultStyle, s])
+    static func cascade(styles: [Style]) -> Style {
+        return merge(styles: [ASControlNode.defaultStyle] + styles)
     }
     
-    private static let association = ObjectAssociation<MutableProperty<Style>>()
-    
-    var style: MutableProperty<Style>
+    var styleset: MutableProperty<Style>
+        // NOTE: can't use 'style' b/c ASLayoutElement (subclass of ASDisplayNode) has already claimed it
     {
         get {
             if let v = ASDisplayNode.association[self]  { return v }
@@ -40,10 +41,12 @@ extension ASDisplayNode
             // else create+save new
             let v = MutableProperty<Style>(ASDisplayNode.defaultStyle)
             ASDisplayNode.association[self] = v
-            v.addObserver(styleChanged)
+            _ = v.addObserver(styleChanged)
             return v
         }
     }
+    
+    
     
     // public interface
     func apply(style : Style)
@@ -65,7 +68,7 @@ extension ASDisplayNode
     // observers
     func styleChanged(_: Observable)
     {
-        let s = ASDisplayNode.cascade(style: style)
+        let s = ASDisplayNode.cascade(styles: [styleset.get()!])
         apply(style: s)
     }
 }
