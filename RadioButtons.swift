@@ -44,7 +44,7 @@ class RadioButtons
         {
             let bvc = btns[i]
             let o = newTouchesObserver(buttonVC: bvc, index: i)
-            _ = bvc.touches.addObserver(o)
+            _ = bvc.node.touches.addObserver(o)
             selectedObservers.append(bvc.selected.addObserver(o))
         }
     }

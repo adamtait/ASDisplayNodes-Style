@@ -18,7 +18,7 @@ class TextButtonVC : ButtonVC
     static let defaultTextStyle : Style = [StyleType.font : UIFont.systemFont(ofSize: UIFont.systemFontSize)]
     fileprivate static func cascade(style s: Style) -> Style
     {
-        return merge(styles: [ButtonVC.defaultStyle, TextButtonVC.defaultTextStyle, s])
+        return merge(styles: [ASControlNode.defaultStyle, TextButtonVC.defaultTextStyle, s])
     }
     
     

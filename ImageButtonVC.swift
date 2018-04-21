@@ -16,7 +16,7 @@ class ImageButtonVC : ButtonVC
     static let defaultImageStyle : Style = [StyleType.imageName : "AppIcon"]
     fileprivate static func cascade(style s: Style) -> Style
     {
-        return merge(styles: [ButtonVC.defaultStyle, ImageButtonVC.defaultImageStyle, s])
+        return merge(styles: [ASControlNode.defaultStyle, ImageButtonVC.defaultImageStyle, s])
     }
     
     
@@ -31,14 +31,18 @@ class ImageButtonVC : ButtonVC
         return n
     }
     
-    override init(node: ASControlNode?,
+    override init(node: ASControlNode,
                   style: Style = [:])
     {
         let s = ImageButtonVC.cascade(style: style)
-        let defaultNode = Layout.node(imageNode: ImageButtonVC.newImageNode(style: s), style: s)
-        let n = node == nil ? defaultNode : node!
-        super.init(node: n)
-        self.postInit(withStyle: s)
+        super.init(node: node, style: s)
+    }
+    
+    convenience init(style: Style)
+    {
+        let s = ImageButtonVC.cascade(style: style)
+        let n = Layout.node(imageNode: ImageButtonVC.newImageNode(style: s), style: s)
+        self.init(node: n, style: style)
     }
     
     required init?(coder aDecoder: NSCoder) {

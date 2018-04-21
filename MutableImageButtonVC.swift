@@ -87,7 +87,7 @@ extension MutableImageButtonVC
                 let activeNode  = selected.get()! ? selectedImageNode : imageNode
                 let activeStyle = selected.get()! ? selectedStyle : style
                 
-                n.set(style: activeStyle)
+                n.styleset.set(activeStyle)
                 let insets = activeStyle[.insets] as! UIEdgeInsets
                 return ASInsetLayoutSpec(insets: insets,
                                          child: activeNode)
