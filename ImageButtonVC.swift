@@ -14,10 +14,6 @@ import AsyncDisplayKit
 class ImageButtonVC : ButtonVC
 {
     static let defaultImageStyle : Style = [StyleType.imageName : "AppIcon"]
-    fileprivate static func cascade(style s: Style) -> Style
-    {
-        return merge(styles: [ASControlNode.defaultStyle, ImageButtonVC.defaultImageStyle, s])
-    }
     
     
     // initializers
@@ -34,13 +30,13 @@ class ImageButtonVC : ButtonVC
     override init(node: ASControlNode,
                   style: Style = [:])
     {
-        let s = ImageButtonVC.cascade(style: style)
+        let s = ASDisplayNode.cascade(styles: [ImageButtonVC.defaultImageStyle, style])
         super.init(node: node, style: s)
     }
     
     convenience init(style: Style)
     {
-        let s = ImageButtonVC.cascade(style: style)
+        let s = ASDisplayNode.cascade(styles: [ImageButtonVC.defaultImageStyle, style])
         let n = Layout.node(imageNode: ImageButtonVC.newImageNode(style: s), style: s)
         self.init(node: n, style: style)
     }

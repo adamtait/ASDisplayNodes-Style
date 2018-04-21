@@ -16,10 +16,6 @@ import AsyncDisplayKit
 class TextButtonVC : ButtonVC
 {
     static let defaultTextStyle : Style = [StyleType.font : UIFont.systemFont(ofSize: UIFont.systemFontSize)]
-    fileprivate static func cascade(style s: Style) -> Style
-    {
-        return merge(styles: [ASControlNode.defaultStyle, TextButtonVC.defaultTextStyle, s])
-    }
     
     
     
@@ -30,7 +26,7 @@ class TextButtonVC : ButtonVC
     // initializers
     init(style: Style = [:])
     {
-        let s = TextButtonVC.cascade(style: style)
+        let s = ASDisplayNode.cascade(styles: [TextButtonVC.defaultTextStyle, style])
         self.buttonNode = ASButtonNode()
         super.init(node: self.buttonNode, style: s)
         setTitle(style)
