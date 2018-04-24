@@ -14,6 +14,7 @@ import AsyncDisplayKit
 class ButtonVC : ASViewController<ASControlNode>
 {
     // public properties
+    let style       : MutableProperty<Style>
     let selected    = MutableProperty<Bool>(false)
 
     
@@ -21,6 +22,7 @@ class ButtonVC : ASViewController<ASControlNode>
     init(node: ASControlNode,
          style: Style = [:])
     {
+        self.style = MutableProperty<Style>(style)
         super.init(node: node)
         self.node.styleset.set(style)
         self.node.enableTouches()

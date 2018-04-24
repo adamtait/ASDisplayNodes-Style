@@ -33,7 +33,7 @@ class MutableTextButtonVC : TextButtonVC
     // observers
     func selectedPropertyChanged(_: Observable)
     {
-        let s = selected.get()! ? selectedStyle.get()! : self.node.styleset.get()!
+        let s = selected.get()! ? selectedStyle.get()! : self.style.get()!
         self.node.styleset.set(s)
         self.setTitle(s)
     }
