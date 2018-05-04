@@ -15,7 +15,7 @@ import AsyncDisplayKit
 
 class TextButtonVC : ButtonVC
 {
-    static let defaultTextStyle : Style = [StyleType.font : UIFont.systemFont(ofSize: UIFont.systemFontSize)]
+    static let defaultTextStyle : Style = [:]
     
     
     
@@ -40,10 +40,22 @@ class TextButtonVC : ButtonVC
     // helpers
     func setTitle(_ style : Style)
     {
+        let f = font(style)
         buttonNode.setTitle(style[.text] as! String,
-                            with: style[.font] as? UIFont,
+                            with: f,
                             with: style[.fgColor] as? UIColor,
                             for: .normal)
+    }
+    
+    func font(_ s: Style) -> UIFont
+    {
+        let size = s[.fontSize] != nil ? CGFloat(s[.fontSize] as! Double) : UIFont.systemFontSize
+        if let n = s[.fontName] as? String
+        {
+            return UIFont(name: n,
+                          size: size)!
+        }
+        return UIFont.systemFont(ofSize: size)
     }
 }
 
