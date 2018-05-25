@@ -1,6 +1,6 @@
 //
-//  MutableImageButtonVC.swift
-//  pinknoise
+//  StatefulImageButtonVC.swift
+//  ASDisplayNodes+Style
 //
 //  Created by Adam Tait on 2/21/18.
 //  Copyright © 2018 Sisterical Inc. All rights reserved.
@@ -11,7 +11,7 @@ import AsyncDisplayKit
 
 
 
-class MutableImageButtonVC : ImageButtonVC
+class StatefulImageButtonVC : ImageButtonVC
 {
     let selectedImageNode : ASImageNode
     
@@ -41,9 +41,7 @@ class MutableImageButtonVC : ImageButtonVC
     
     
     // Observers
-    func selectedChanged(_: Observable)     { updateSelected() }
-    
-    func updateSelected()
+    func selectedChanged(_: Observable)
     {
         
         self.node.transitionLayout(withAnimation: true,
@@ -56,24 +54,10 @@ class MutableImageButtonVC : ImageButtonVC
 
 
 // layout
-extension MutableImageButtonVC
+extension StatefulImageButtonVC
 {
     enum Layout
     {
-        static func node(imageNode          : ASImageNode,
-                         style              : Style,
-                         selectedImageNode  : ASImageNode,
-                         selectedStyle      : Style,
-                         selected           : MutableProperty<Bool>)
-            -> ASControlNode
-        {
-            let n = ASControlNode()
-            mutate(node: n, imageNode: imageNode, style: style,
-                   selectedImageNode: selectedImageNode, selectedStyle: selectedStyle,
-                   selected: selected)
-            return n
-        }
-        
         static func mutate(node n               : ASControlNode,
                            imageNode            : ASImageNode,
                            style                : Style,
