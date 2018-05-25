@@ -38,7 +38,7 @@ class ImageButtonVC : ButtonVC
     {
         let s = ASDisplayNode.cascade(styles: [ImageButtonVC.defaultImageStyle, style])
         let n = Layout.node(imageNode: ImageButtonVC.newImageNode(style: s), style: s)
-        self.init(node: n, style: style)
+        self.init(node: n, style: s)
     }
     
     required init?(coder aDecoder: NSCoder) {

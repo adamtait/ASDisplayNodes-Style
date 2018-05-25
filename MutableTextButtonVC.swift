@@ -8,24 +8,28 @@
 
 import UIKit
 
+
 class MutableTextButtonVC : TextButtonVC
 {
-    // private properties
-    let titleSelected : MutableProperty<String>
-    let styleSelected : MutableProperty<Style>
+    struct State
+    {
+        let title : String
+        let style : Style
+    }
     
+    // private properties
+    let primary     : MutableProperty<State>
+    let secondary   : MutableProperty<State>
     
     
     // initializers
-    init(style          : Style,
-         selectedStyle  : Style,
-         title          : String,
-         selectedTitle  : String)
+    init(primary    : State,
+         selected   : State)
     {
-        self.titleSelected = MutableProperty<String>(selectedTitle)
-        self.styleSelected = MutableProperty<Style>(selectedStyle)
-        super.init(style: style, title: title)
-        _ = selected.addObserver(selectedPropertyChanged)
+        self.primary    = MutableProperty<State>(primary)
+        self.secondary  = MutableProperty<State>(selected)
+        super.init(style: primary.style, title: primary.title)
+        _ = self.selected.addObserver(selectedPropertyChanged)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -37,10 +41,8 @@ class MutableTextButtonVC : TextButtonVC
     // observers
     func selectedPropertyChanged(_: Observable)
     {
-        let s = selected.get()! ? styleSelected.get()! : self.style.get()!
-        self.node.styleset.set(s)
-        
-        let t = selected.get()! ? titleSelected.get()! : self.titlePrimary.get()!
-        self.set(title: t)
+        let s = selected.get()! ? secondary.get()! : primary.get()!
+        self.node.styleset.set(s.style)
+        self.set(title: s.title)
     }
 }
