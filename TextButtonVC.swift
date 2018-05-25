@@ -20,16 +20,18 @@ class TextButtonVC : ButtonVC
     
     
     // private properties
+    let titlePrimary : MutableProperty<String>
     let buttonNode : ASButtonNode
     
     
     // initializers
-    init(style: Style = [:])
+    init(style: Style = [:], title: String)
     {
+        self.titlePrimary = MutableProperty<String>(title)
         let s = ASDisplayNode.cascade(styles: [TextButtonVC.defaultTextStyle, style])
         self.buttonNode = ASButtonNode()
         super.init(node: self.buttonNode, style: s)
-        setTitle(style)
+        set(title: title)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -37,25 +39,15 @@ class TextButtonVC : ButtonVC
     }
     
     
-    // helpers
-    func setTitle(_ style : Style)
-    {
-        let f = font(style)
-        buttonNode.setTitle(style[.text] as! String,
-                            with: f,
-                            with: style[.fgColor] as? UIColor,
-                            for: .normal)
-    }
     
-    func font(_ s: Style) -> UIFont
+    // helpers
+    func set(title: String)
     {
-        let size = s[.fontSize] != nil ? CGFloat(s[.fontSize] as! Double) : UIFont.systemFontSize
-        if let n = s[.fontName] as? String
-        {
-            return UIFont(name: n,
-                          size: size)!
-        }
-        return UIFont.systemFont(ofSize: size)
+        let s = self.node.styleset.get()!
+        buttonNode.setTitle(title,
+                            with: s.font(),
+                            with: s[.fgColor] as? UIColor,
+                            for: .normal)
     }
 }
 

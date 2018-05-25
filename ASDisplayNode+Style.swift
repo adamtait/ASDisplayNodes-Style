@@ -26,10 +26,12 @@ extension ASDisplayNode
     
     // Style
     static let defaultStyle : Style = [StyleType.bgColor : UIColor.white,
-                                       StyleType.fgColor : UIColor.blue]
+                                       StyleType.fgColor : UIColor.blue,
+                                       StyleType.fontName : UIFont.systemFont(ofSize: 12.0).fontName,
+                                       StyleType.fontSize : UIFont.systemFontSize]
     
     static func cascade(styles: [Style]) -> Style {
-        return merge(styles: [ASControlNode.defaultStyle] + styles)
+        return ASControlNode.defaultStyle.merge(styles)
     }
     
     var styleset: MutableProperty<Style>
