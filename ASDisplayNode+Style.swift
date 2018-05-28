@@ -64,6 +64,10 @@ extension ASDisplayNode
         if let v = style[.cornerRadius] {
             self.cornerRadius = toCgFloat(anyNumber: v)
         }
+        
+        if let v = style[.alpha] {
+            self.alpha = toCgFloat(anyNumber: v)
+        }
     }
     
     
