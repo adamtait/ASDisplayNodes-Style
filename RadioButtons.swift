@@ -32,22 +32,36 @@ class RadioButtons
     // double selection: when the same button is selected twice in a row, that button is de-selected
 {
     let buttons                         : [ButtonVC]
-    let selectedIndex                   = MutableProperty<Int>(-1)      // -1 => none selected. Any value outside 0..<buttons.count will do
+    let selectedIndex                   : MutableProperty<Int>
     fileprivate var selectedObservers   : [Observable.Ref]  = []
     
-    init(_ btns : [ButtonVC])
+    
+    
+    // initializers
+    convenience init(_ btns : [ButtonVC])
+    {
+        self.init(btns,
+                  selected: -1)     // -1 => none selected. Any value outside 0..<buttons.count will do
+    }
+    
+    init(_ btns     : [ButtonVC],
+         selected   : Int)
     {
         self.buttons = btns
+        self.selectedIndex = MutableProperty<Int>(selected)
         
         // add observers
         for i in 0 ..< btns.count
         {
             let bvc = btns[i]
+            if i == selected     { bvc.selected.set(true) }
             let o = newTouchesObserver(buttonVC: bvc, index: i)
             _ = bvc.node.touches.addObserver(o)
             selectedObservers.append(bvc.selected.addObserver(o))
         }
     }
+    
+    
     
     
     // Observers
