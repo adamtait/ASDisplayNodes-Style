@@ -33,7 +33,8 @@ class TextVC : ASViewController<ASEditableTextNode>
     // initializers
     init(text           : TextProperties,
          placeholder    : TextProperties? = nil,
-         multiline      : Bool = false
+         multiline      : Bool = false,
+         keyboardType   : UIKeyboardType = UIKeyboardType.default
          )
     {
         self.tp         = text
@@ -47,6 +48,7 @@ class TextVC : ASViewController<ASEditableTextNode>
         layout()
         set(text: text)
         if let p = placeholder   { set(placeholder: p) }
+        self.node.textView.keyboardType = keyboardType
         
         _ = self.tp.text.addObserver(textChanged)
     }
